@@ -100,7 +100,7 @@ Using the bottleneck features created by the inception v3 model, the gradient bo
 
 ## How to use
 
-Start by cloning this repository and opening [this notebook](./Age and Gender Recognition.ipynb) wih jupyter. The pictures and metadata must then be downloaded from this [link](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/static/wiki_crop.tar), and extracted to the ./data directory.
+Start by cloning this repository and opening [this notebook](https://github.com/Bougeant/Age_and_Gender_Recognition/blob/master/Age%20and%20Gender%20Recognition.ipynb) wih jupyter. The pictures and metadata must then be downloaded from this [link](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/static/wiki_crop.tar), and extracted to the ./data directory.
 
 To save some time (24 to 48 hours), it is recommended to skip the Tensorflow model training and to read the wiki_metadata.csv file directly. This repository already includes the verified gender images (about 19000 pictures) and the tensorflow bottlenecks for these images to save time and effort.
 
