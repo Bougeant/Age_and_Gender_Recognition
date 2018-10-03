@@ -25,17 +25,17 @@ The data is first cleaned by converting the date of birth from Matlab serial dat
 
 Then, a random sample of 20000 images (10000 males and 10000 females) from this dataset is selected and the images are moved to a folder based on their gender (male & female folders) to allow the inception v3 re-training process by Tensorflow.
 
-Because this sample of 20000 images was not perfectly clean (some portraits gender are mislabelled, mainly because of the face extraction algorithm to generate the portraits from Wikipedia pictures), it became necessary to remove the images with mislabelled gender manually. Since this is obviously a very time consuming and boring task (about 2 or 3 hours spent scanning rows of images to spot mislabeled gender), the cleaned dataset containing 19213 images is provided in this repository.
+Because this sample of 20000 images was not perfectly clean (some portraits gender are mislabelled, mainly because of the face extraction algorithm to generate the portraits from Wikipedia pictures), it became necessary to remove the images with mislabelled gender manually. Since this is obviously a very time-consuming and tedious task (about 2 or 3 hours spent scanning rows of images to spot mislabeled gender), the cleaned dataset containing 19213 images is provided in this repository.
 
 ### Gender predictions
 
 #### Gender predictions using Tensorflow
 
-Then, using Tensorflow's retrain module, the gender of each person in the selected portrait database is predicted using cross-validation. For each validation fold, the remaining images are moved to a training folder and the inception v3 model is retrained on the specified labels for these training images. Then, for each image in the validation fold, the gender is predicted. Finally, the training data is moved back to the original folder. Because the most-time consuming part of this process is the generation of bottlenecks files by the inception v3 model for each image, they are also included in the repository. 
+Then, using Tensorflow's retrain module, the gender of each person in the selected portrait database is predicted using cross-validation. For each validation fold, the remaining images are moved to a training folder and the inception v3 model is retrained on the specified labels for these training images. Then, for each image in the validation fold, the gender is predicted. Finally, the training data is moved back to the original folder. Because the most time-consuming part of this process is the generation of bottlenecks files by the inception v3 model for each image, they are also included in the repository. 
 
 The cross-validated accuracy obtained by the re-trained model for predicting the gender in the portraits is 89.2%.
 
-By looking at the mislabelled images in the figure below, it can be clearly seen that males with long hair are often mislabelled as females by the model, even when they clearly possess masculine facial features (strong jaw, facial hair, etc.). 
+By looking at the mislabelled images in the figure below, it can be clearly seen that males with long hair are often mislabelled as females by the model, even when they possess some masculine facial features (strong jaw, facial hair, etc.). 
 
 <p align="center"><img src="./images/mislabelled_gender.png" width = "1000"></p>
 
@@ -43,11 +43,11 @@ On the contrary, women with long blond hair are often successfully labelled with
 
 <p align="center"><img src="./images/most_confident_predictions_gender.png" width = "1000"></p>
 
-In fact, if the average faces of a male and of a female are calculated and plotted (see figure below), it can be clearly seen that, despite the blur caused by averaging thousands of unaligned pictures, the typical male has short hair while the typical female has long hair.
+In fact, if the average faces of a male and of a female are calculated and plotted (see figure below), it can be clearly seen that, despite the blur caused by averaging thousands of unaligned pictures, the typical male in the dataset has short hair while the typical female has long hair.
 
 <p align="center"><img src="./images/average_female_male.png" width = "700"></p>
 
-When plotting the renormalized difference between the average face of a female and that of a male, it is possible to identify the main difference between typical females and males: females have darker spots along the side due to their typically long hair, their chin is lighter because they lack facial hair, their lips are redder (possibly due to the use of lipstick) and their eyes are darker (also possibly because of makeup). Incidentally, their clothes are slightly redder than that of males, which is probably not a very relevant criterion for classifying the gender of a person.
+When plotting the renormalized difference between the average face of a female and that of a male, it is possible to identify the main difference between typical females and males in the dataset: females have darker spots along the side due to their typically long hair, their chin is lighter because they lack facial hair, their lips are redder (possibly due to the use of lipstick) and their eyes are darker (also possibly because of makeup). Incidentally, their clothes are slightly redder than that of males, which is probably not a very relevant criterion for classifying the gender of a person.
 
 <p align="center"><img src="./images/diff_female_male.png" width = "350"></p>
 
@@ -55,11 +55,11 @@ The figure below shows the confusion matrix for cross-validated gender predictio
 
 <p align="center"><img src="./images/confusion_matrix_gender.png" width = "580"></p>
 
-All these observations show that the re-trained model bases its decisions mainly on spatial features and is probably unable to detect and analyse each facial feature independently (e.g. shape and size of jaw relative to the face, structure of the skin, etc...) as humans usually do. Indeed, for almost every portrait in the database, the gender can be recognized almost immediately by a human.
+All these observations show that the re-trained model bases its decisions mainly on spatial features and is probably unable to detect and analyse each facial feature independently (e.g. shape and size of jaw relative to the face, structure of the skin, etc...) as humans usually do. Indeed, a human can identify the gender for each image in this database with an accuracy close to 100%.
 
 #### Gender predictions with Gradient Boosting classifier
 
-By using the bottlenecks created by the inception v3 model for each picture as features, it is also possible to use another model to predict gender. In this project, the [light Gradient Boosting Machine (lightGBM)](https://lightgbm.readthedocs.io/en/latest/) classifier model, which is a [Gradient Boosting](https://en.wikipedia.org/wiki/Gradient_boosting) algorithm, is used instead of inception's model last Softmax activation layer. LightGBM is known for both speed and accuracy performance for such structured problems (once the bottlenecks features are created, this project becomes a typical machine learning task). 
+By using the bottlenecks created by the inception v3 model for each picture as features, it is also possible to use another model to predict gender. In this project, the [light Gradient Boosting Machine (lightGBM)](https://lightgbm.readthedocs.io/en/latest/) classifier model (a [Gradient Boosting](https://en.wikipedia.org/wiki/Gradient_boosting) algorithm) is used, instead of inception's model last Softmax activation layer. LightGBM is known for both speed and accuracy performance for such structured problems (once the bottlenecks features are created, this project becomes a typical machine learning task). 
 
 Indeed, the cross-validated predictions for gender with Tensorflow take about 48 hours of computation time on a laptop with reasonably good performances, or 24 hours if the bottlenecks files already exist (in which case most of the time is spent on image processing for predictions because the bottlenecks are already available for training the model). Instead, the LightGBM model is able to make cross-validated predictions in a few minutes because all the relevant information required for training and predictions is already contained in the bottlenecks files.
 
